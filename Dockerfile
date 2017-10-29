@@ -39,7 +39,6 @@ RUN \
   make install && \
   ldconfig
 
-
 RUN chown -R node:node /usr/local/lib/node_modules && chown -R node:node /usr/local/bin
 # we chown the folders so we can npm install --global flawlessly
 # https://github.com/me-ventures/angular-cli-docker/blob/master/Dockerfile
@@ -53,7 +52,6 @@ RUN echo 'export NODE_PATH="'$(npm root -g)'"' >> ~/.bashrc
 # https://askubuntu.com/a/438170
 # https://stackoverflow.com/questions/15636367/nodejs-require-a-global-module-package#comment31655957_15646750
 
-  
 RUN \
   # Clean up
   apt-get remove -y automake curl build-essential && \
@@ -61,9 +59,5 @@ RUN \
   apt-get autoclean && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-  
-RUN \
-  # Build libvips
-  npm install sharp -g
 
 CMD [ "/bin/bash" ]
