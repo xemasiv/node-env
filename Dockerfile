@@ -28,9 +28,7 @@ ENV LIBVIPS_VERSION_PATCH 5
 
 ENV LIBVIPS_VERSION $LIBVIPS_VERSION_MAJOR.$LIBVIPS_VERSION_MINOR.$LIBVIPS_VERSION_PATCH
 
-RUN \
-  # Build libvips
-  cd /tmp && \
+RUN cd /tmp && \
   curl -L -O https://github.com/jcupitt/libvips/releases/download/v$LIBVIPS_VERSION/vips-$LIBVIPS_VERSION.tar.gz && \
   tar zxvf vips-$LIBVIPS_VERSION.tar.gz && \
   cd /tmp/vips-$LIBVIPS_VERSION && \
@@ -38,26 +36,26 @@ RUN \
   make && \
   make install && \
   ldconfig
+# Build libvips
 
 RUN chown -R node:node /usr/local/lib/node_modules && chown -R node:node /usr/local/bin
-# we chown the folders so we can npm install --global flawlessly
+# We chown the folders so we can npm install --global flawlessly
 # https://github.com/me-ventures/angular-cli-docker/blob/master/Dockerfile
 
 RUN sudo -u node npm install sharp --global
-# you can't switch to another user, but you can run as another user.
+# You can't switch to another user, but you can run as another user.
 # https://unix.stackexchange.com/a/3572
 
 RUN echo 'export NODE_PATH="'$(npm root -g)'"' >> ~/.bashrc
-# setting node path in env is now mandatory export NODE_PATH thru ~/.bashrc
+# Setting node path in env is now mandatory export NODE_PATH thru ~/.bashrc
 # https://askubuntu.com/a/438170
 # https://stackoverflow.com/questions/15636367/nodejs-require-a-global-module-package#comment31655957_15646750
 
-RUN \
-  # Clean up
-  apt-get remove -y automake curl build-essential && \
+RUN apt-get remove -y automake curl build-essential && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# Clean-up.
 
 CMD [ "/bin/bash" ]
